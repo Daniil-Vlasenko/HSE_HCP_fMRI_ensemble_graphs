@@ -5,6 +5,11 @@ import sklearn.svm
 import multiprocessing
 
 
+
+
+
+
+# --------------------------------------
 def classifier_learning_(files_in1, files_in2, files_out):
     """
     Обучение классификаторов.
@@ -40,7 +45,6 @@ def classifier_learning_(files_in1, files_in2, files_out):
             pickle.dump(svc, open(files_out[count], 'wb'))
 
 
-# --------------------------------------
 def ensemble_classifier_learning_(files_in1, files_in2, files_out):
     def classifier_learning_(files_in1, files_in2, files_out, proc):
         data_vertex1 = pandas.read_csv(files_in1[0], index_col=0)

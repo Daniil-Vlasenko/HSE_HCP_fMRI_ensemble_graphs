@@ -15,4 +15,5 @@ import edges_
     # иначе файлы не все будут использованы почему-то).
 
 if __name__ == '__main__':
+    paths.data_preparation(paths.files_mean_pearson_cross_correlation_wm, 'LR', paths.folds_gnn['fold0']['test'])
     edges.ensemble_classifier_learning()

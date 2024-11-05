@@ -262,6 +262,19 @@ folders_pca_ensemble_edges_train_language = [[f'../../graphs/pca/ensemble_edges/
 folders_pca_ensemble_edges_train_social = [[f'../../graphs/pca/ensemble_edges/fold{i}/train/fold{j}/SOCIAL' for j in range(3)] for i in range(4)]
 folders_pca_ensemble_edges_train_relational = [[f'../../graphs/pca/ensemble_edges/fold{i}/train/fold{j}/RELATIONAL' for j in range(3)] for i in range(4)]
 folders_pca_ensemble_edges_train_emotion = [[f'../../graphs/pca/ensemble_edges/fold{i}/train/fold{j}/EMOTION' for j in range(3)] for i in range(4)]
+
+
+def data_preparation(files_in, encoding_type, sample):
+    """
+    Функция разделяет файлы для обучения в соответствии с направлением кодирования и разбиением выборки.
+
+    :param files_in: Файлы, которые нужно разбить для обучения.
+    :param encoding_type: Тип кодирования.
+    :param sample: Индексы людей, которых нужно отобрать.
+    :return:
+    """
+    result = [file for file in files_in if encoding_type in file.split('/')[-1] and int(file.split('/')[-1][:6]) in sample]
+    return result[::2], result[1::2]
 ########## АНСАМБЛИ ##################################################
 
 
