@@ -195,14 +195,6 @@ files_pca_models_social = [f'{folder_pca_models_social}/{i}_{j}.pickle' for i in
 files_pca_models_relational = [f'{folder_pca_models_relational}/{i}_{j}.pickle' for i in range(379) for j in range(i + 1, 379)]
 files_pca_models_emotion = [f'{folder_pca_models_emotion}/{i}_{j}.pickle' for i in range(379) for j in range(i + 1, 379)]
 
-# Папка с ансамблевыми ребрами, mean
-folders_mean_ensemble_edges_test = [f'../../graphs/mean/ensemble_edges/fold{i}/test' for i in range(4)]
-folders_mean_ensemble_edges_train = [[f'../../graphs/mean/ensemble_edges/fold{i}/train/fold{j}' for j in range(3)] for i in range(4)]
-
-# Папка с ансамблевыми ребрами, pca
-folders_pca_ensemble_edges_test = [f'../../graphs/pca/ensemble_edges/fold{i}/test' for i in range(4)]
-folders_pca_ensemble_edges_train = [[f'../../graphs/pca/ensemble_edges/fold{i}/train/fold{j}' for j in range(3)] for i in range(4)]
-
 # Делим двухуровнево выборку
 folds_gnn = {'fold0': {'train': None, 'test': None},
              'fold1': {'train': None, 'test': None},
@@ -235,17 +227,41 @@ for fold_gnn, (train_index_gnn, test_index_gnn) in enumerate(kf_gnn.split(people
         folds_ensemble[f'fold{fold_gnn}'][f'fold{fold_ensemble}']['train'] = people_train_ensemble
         folds_ensemble[f'fold{fold_gnn}'][f'fold{fold_ensemble}']['test'] = people_test_ensemble
 
+# Папка с ансамблевыми ребрами, mean test
+folders_mean_ensemble_edges_test_wm = [f'../../graphs/mean/ensemble_edges/fold{i}/test/WM' for i in range(4)]
+folders_mean_ensemble_edges_test_gambling = [f'../../graphs/mean/ensemble_edges/fold{i}/test/GAMBLING' for i in range(4)]
+folders_mean_ensemble_edges_test_motor = [f'../../graphs/mean/ensemble_edges/fold{i}/test/MOTOR' for i in range(4)]
+folders_mean_ensemble_edges_test_language = [f'../../graphs/mean/ensemble_edges/fold{i}/test/LANGUAGE' for i in range(4)]
+folders_mean_ensemble_edges_test_social = [f'../../graphs/mean/ensemble_edges/fold{i}/test/SOCIAL' for i in range(4)]
+folders_mean_ensemble_edges_test_relational = [f'../../graphs/mean/ensemble_edges/fold{i}/test/RELATIONAL' for i in range(4)]
+folders_mean_ensemble_edges_test_emotion = [f'../../graphs/mean/ensemble_edges/fold{i}/test/EMOTION' for i in range(4)]
 
+# Папка с ансамблевыми ребрами, mean train
+folders_mean_ensemble_edges_train_wm = [[f'../../graphs/mean/ensemble_edges/fold{i}/train/fold{j}/WM' for j in range(3)] for i in range(4)]
+folders_mean_ensemble_edges_train_gambling = [[f'../../graphs/mean/ensemble_edges/fold{i}/train/fold{j}/GAMBLING' for j in range(3)] for i in range(4)]
+folders_mean_ensemble_edges_train_motor = [[f'../../graphs/mean/ensemble_edges/fold{i}/train/fold{j}/MOTOR' for j in range(3)] for i in range(4)]
+folders_mean_ensemble_edges_train_language = [[f'../../graphs/mean/ensemble_edges/fold{i}/train/fold{j}/LANGUAGE' for j in range(3)] for i in range(4)]
+folders_mean_ensemble_edges_train_social = [[f'../../graphs/mean/ensemble_edges/fold{i}/train/fold{j}/SOCIAL' for j in range(3)] for i in range(4)]
+folders_mean_ensemble_edges_train_relational = [[f'../../graphs/mean/ensemble_edges/fold{i}/train/fold{j}/RELATIONAL' for j in range(3)] for i in range(4)]
+folders_mean_ensemble_edges_train_emotion = [[f'../../graphs/mean/ensemble_edges/fold{i}/train/fold{j}/EMOTION' for j in range(3)] for i in range(4)]
 
+# Папка с ансамблевыми ребрами, pca test
+folders_pca_ensemble_edges_test_wm = [f'../../graphs/pca/ensemble_edges/fold{i}/test/WM' for i in range(4)]
+folders_pca_ensemble_edges_test_gambling = [f'../../graphs/pca/ensemble_edges/fold{i}/test/GAMBLING' for i in range(4)]
+folders_pca_ensemble_edges_test_motor = [f'../../graphs/pca/ensemble_edges/fold{i}/test/MOTOR' for i in range(4)]
+folders_pca_ensemble_edges_test_language = [f'../../graphs/pca/ensemble_edges/fold{i}/test/LANGUAGE' for i in range(4)]
+folders_pca_ensemble_edges_test_social = [f'../../graphs/pca/ensemble_edges/fold{i}/test/SOCIAL' for i in range(4)]
+folders_pca_ensemble_edges_test_relational = [f'../../graphs/pca/ensemble_edges/fold{i}/test/RELATIONAL' for i in range(4)]
+folders_pca_ensemble_edges_test_emotion = [f'../../graphs/pca/ensemble_edges/fold{i}/test/EMOTION' for i in range(4)]
 
-# Файлы ансамблевых графов, mean
-files_mean_ensgraphs_wm = [f'{folder_mean_pearson_cross_correlation_wm}/{file.split("/")[-1][:-6]}npy' for file in files_split_mean_wm]
-files_mean_pearson_cross_correlation_gambling = [f'{folder_mean_pearson_cross_correlation_gambling}/{file.split("/")[-1][:-6]}npy' for file in files_split_mean_gambling]
-files_mean_pearson_cross_correlation_motor = [f'{folder_mean_pearson_cross_correlation_motor}/{file.split("/")[-1][:-6]}npy' for file in files_split_mean_motor]
-files_mean_pearson_cross_correlation_language = [f'{folder_mean_pearson_cross_correlation_language}/{file.split("/")[-1][:-6]}npy' for file in files_split_mean_language]
-files_mean_pearson_cross_correlation_social = [f'{folder_mean_pearson_cross_correlation_social}/{file.split("/")[-1][:-6]}npy' for file in files_split_mean_social]
-files_mean_pearson_cross_correlation_relational = [f'{folder_mean_pearson_cross_correlation_relational}/{file.split("/")[-1][:-6]}npy' for file in files_split_mean_relational]
-files_mean_pearson_cross_correlation_emotion = [f'{folder_mean_pearson_cross_correlation_emotion}/{file.split("/")[-1][:-6]}npy' for file in files_split_mean_emotion]
+# Папка с ансамблевыми ребрами, pca train
+folders_pca_ensemble_edges_train_wm = [[f'../../graphs/pca/ensemble_edges/fold{i}/train/fold{j}/WM' for j in range(3)] for i in range(4)]
+folders_pca_ensemble_edges_train_gambling = [[f'../../graphs/pca/ensemble_edges/fold{i}/train/fold{j}/GAMBLING' for j in range(3)] for i in range(4)]
+folders_pca_ensemble_edges_train_motor = [[f'../../graphs/pca/ensemble_edges/fold{i}/train/fold{j}/MOTOR' for j in range(3)] for i in range(4)]
+folders_pca_ensemble_edges_train_language = [[f'../../graphs/pca/ensemble_edges/fold{i}/train/fold{j}/LANGUAGE' for j in range(3)] for i in range(4)]
+folders_pca_ensemble_edges_train_social = [[f'../../graphs/pca/ensemble_edges/fold{i}/train/fold{j}/SOCIAL' for j in range(3)] for i in range(4)]
+folders_pca_ensemble_edges_train_relational = [[f'../../graphs/pca/ensemble_edges/fold{i}/train/fold{j}/RELATIONAL' for j in range(3)] for i in range(4)]
+folders_pca_ensemble_edges_train_emotion = [[f'../../graphs/pca/ensemble_edges/fold{i}/train/fold{j}/EMOTION' for j in range(3)] for i in range(4)]
 ########## АНСАМБЛИ ##################################################
 
 
