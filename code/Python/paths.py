@@ -204,52 +204,39 @@ folders_pca_ensemble_edges_test = [f'../../graphs/pca/ensemble_edges/fold{i}/tes
 folders_pca_ensemble_edges_train = [[f'../../graphs/pca/ensemble_edges/fold{i}/train/fold{j}' for j in range(3)] for i in range(4)]
 
 # Делим двухуровнево выборку
-folds_gnn = {'fold1': {'train': None, 'test': None},
+folds_gnn = {'fold0': {'train': None, 'test': None},
+             'fold1': {'train': None, 'test': None},
              'fold2': {'train': None, 'test': None},
-             'fold3': {'train': None, 'test': None},
-             'fold4': {'train': None, 'test': None}}
+             'fold3': {'train': None, 'test': None}}
 
-folds_ensemble = {'fold1': {'fold1': {'train': None, 'test': None},
-                            'fold2': {'train': None, 'test': None},
-                            'fold3': {'train': None, 'test': None}},
-                  'fold2': {'fold1': {'train': None, 'test': None},
-                            'fold2': {'train': None, 'test': None},
-                            'fold3': {'train': None, 'test': None}},
-                  'fold3': {'fold1': {'train': None, 'test': None},
-                            'fold2': {'train': None, 'test': None},
-                            'fold3': {'train': None, 'test': None}},
-                  'fold4': {'fold1': {'train': None, 'test': None},
-                            'fold2': {'train': None, 'test': None},
-                            'fold3': {'train': None, 'test': None}}}
+folds_ensemble = {'fold0': {'fold0': {'train': None, 'test': None},
+                            'fold1': {'train': None, 'test': None},
+                            'fold2': {'train': None, 'test': None}},
+                  'fold1': {'fold0': {'train': None, 'test': None},
+                            'fold1': {'train': None, 'test': None},
+                            'fold2': {'train': None, 'test': None}},
+                  'fold2': {'fold0': {'train': None, 'test': None},
+                            'fold1': {'train': None, 'test': None},
+                            'fold2': {'train': None, 'test': None}},
+                  'fold3': {'fold0': {'train': None, 'test': None},
+                            'fold1': {'train': None, 'test': None},
+                            'fold2': {'train': None, 'test': None}}}
 
-
-# numpy.set_printoptions(linewidth=int(1e10))
 people = numpy.array([int(index.split('/')[-1][:6]) for index in files_parcell_mean_wm_ if 'LR' in index])
-kf_l1 = KFold(n_splits=4, shuffle=True, random_state=1)
-for fold_l1, (train_index_gnn, test_index_gnn) in enumerate(kf_l1.split(people)):
+kf_gnn = KFold(n_splits=4, shuffle=True, random_state=1)
+for fold_gnn, (train_index_gnn, test_index_gnn) in enumerate(kf_gnn.split(people)):
     people_train_gnn, people_test_gnn = people[train_index_gnn], people[test_index_gnn]
-    # print('level 1, fold', fold_l1, len(people_train_gnn), len(people_test_gnn))
-    # print('train l1:', people_train_gnn)
-    # print('test l1:', people_test_gnn, '\n')
+    folds_gnn[f'fold{fold_gnn}']['train'] = people_train_gnn
+    folds_gnn[f'fold{fold_gnn}']['test'] = people_test_gnn
 
-    kf_l2 = KFold(n_splits=3, shuffle=True, random_state=1)
-    for fold_l2, (train_index_ensemble, test_index_ensemble) in enumerate(kf_l2.split(people_train_gnn)):
+    kf_ensemble = KFold(n_splits=3, shuffle=True, random_state=1)
+    for fold_ensemble, (train_index_ensemble, test_index_ensemble) in enumerate(kf_ensemble.split(people_train_gnn)):
         people_train_ensemble, people_test_ensemble = people_train_gnn[train_index_ensemble], people_train_gnn[test_index_ensemble]
-    #     print('level 2, fold', fold_l2, len(people_train_ensemble), len(people_test_ensemble))
-    #     print('train l2:', people_train_ensemble)
-    #     print('test l2:', people_test_ensemble, '\n')
-    # print('\n\n')
+        folds_ensemble[f'fold{fold_gnn}'][f'fold{fold_ensemble}']['train'] = people_train_ensemble
+        folds_ensemble[f'fold{fold_gnn}'][f'fold{fold_ensemble}']['test'] = people_test_ensemble
 
 
 
-# Папки ансамблевых графов, mean fold1
-folder_mean_ensemble_edges_wm = "../../graphs/mean/ensemble_edges/WM"
-folder_mean_ensemble_edges_gambling = "../../graphs/mean/ensemble_edges/GAMBLING"
-folder_mean_ensemble_edges_motor = "../../graphs/mean/ensemble_edges/MOTOR"
-folder_mean_ensemble_edges_language = "../../graphs/mean/ensemble_edges/LANGUAGE"
-folder_mean_ensemble_edges_social = "../../graphs/mean/ensemble_edges/SOCIAL"
-folder_mean_ensemble_edges_relational = "../../graphs/mean/ensemble_edges/RELATIONAL"
-folder_mean_ensemble_edges_emotion = "../../graphs/mean/ensemble_edges/EMOTION"
 
 # Файлы ансамблевых графов, mean
 files_mean_ensgraphs_wm = [f'{folder_mean_pearson_cross_correlation_wm}/{file.split("/")[-1][:-6]}npy' for file in files_split_mean_wm]
