@@ -15,5 +15,9 @@ import edges_
     # иначе файлы не все будут использованы почему-то).
 
 if __name__ == '__main__':
-    paths.data_preparation(paths.files_mean_pearson_cross_correlation_wm, 'LR', paths.folds_gnn['fold0']['test'])
-    edges.ensemble_classifier_learning()
+    edge1, edge2 = paths.data_preparation(paths.files_mean_pearson_cross_correlation_wm, 'LR',
+                                          paths.folds_gnn['fold0']['test'])
+    vertex1, vertex2 = paths.data_preparation(paths.files_mean_vertices_wm, 'LR',
+                                              paths.folds_gnn['fold0']['test'])
+    # edges.models_learning([edge1, edge2], [vertex1, vertex2], paths.files_mean_models_wm)
+    edges.models_calculation([edge1, edge2], [vertex1, vertex2], paths.files_mean_models_wm, paths.folders_mean_ensemble_edges_test_wm[0])
