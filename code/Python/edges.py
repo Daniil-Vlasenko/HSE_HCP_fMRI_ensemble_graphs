@@ -32,7 +32,7 @@ def models_learning(files_in1, files_in2, files_out):
                                   f'v_{j}_mean': numpy.concatenate([data_vertex1[:, j, 0], data_vertex2[:, j, 0]]),
                                   f'v_{i}_std': numpy.concatenate([data_vertex1[:, i, 1], data_vertex2[:, i, 1]]),
                                   f'v_{j}_std': numpy.concatenate([data_vertex1[:, j, 1], data_vertex2[:, j, 1]]),
-                                  f'e_{i}_{j}': numpy.concatenate([data_edge1[:, i, j], data_edge1[:, i, j]])})
+                                  f'e_{i}_{j}': numpy.concatenate([data_edge1[:, i, j], data_edge2[:, i, j]])})
             Y = [1 for _ in range(data_vertex1.shape[0])] + [2 for _ in range(data_vertex1.shape[0])]
 
             svc = svm.SVC(kernel="poly", probability=True)
@@ -72,18 +72,20 @@ def models_calculation(files_in1, files_in2, files_in3, folder_out):
                                   f'v_{j}_mean': numpy.concatenate([data_vertex1[:, j, 0], data_vertex2[:, j, 0]]),
                                   f'v_{i}_std': numpy.concatenate([data_vertex1[:, i, 1], data_vertex2[:, i, 1]]),
                                   f'v_{j}_std': numpy.concatenate([data_vertex1[:, j, 1], data_vertex2[:, j, 1]]),
-                                  f'e_{i}_{j}': numpy.concatenate([data_edge1[:, i, j], data_edge1[:, i, j]])})
+                                  f'e_{i}_{j}': numpy.concatenate([data_edge1[:, i, j], data_edge2[:, i, j]])})
             svm_ = pickle.load(open(files_in3[count], 'rb'))
             Y = svm_.predict_proba(X)
             results1[:, i, j] = Y[:data_edge1.shape[0], 1] - Y[:data_edge1.shape[0], 0]
+            results1[:, j, i] = results1[:, i, j]
             results2[:, i, j] = Y[data_edge1.shape[0]:, 1] - Y[data_edge1.shape[0]:, 0]
+            results2[:, j, i] = results2[:, i, j]
             count += 1
 
     for data1, data2, file1, file2 in zip(results1, results2, files_in1[0], files_in1[1]):
         numpy.save(f'{folder_out}/{file1.split('/')[-1]}', data1)
         numpy.save(f'{folder_out}/{file2.split('/')[-1]}', data2)
 
-ппереоформить каталог ансаблевых графов в словарь и написать цикл вычисления всего подряд
+# ппереоформить каталог ансаблевых графов в словарь и написать цикл вычисления всего подряд  и написать удаление файлов перед вычислением
 # --------------------------------------
 
 
