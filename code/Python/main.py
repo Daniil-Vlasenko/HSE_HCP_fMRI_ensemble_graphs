@@ -14,6 +14,9 @@ import edges_
     # иначе файлы не все будут использованы почему-то).
 
 if __name__ == '__main__':
+    encoding_type = 'RL'
+    # for
+
     edge1_tr, edge2_tr = paths.data_preparation(paths.files_mean_pearson_cross_correlation_wm,
                                                 'LR', paths.folds_ensemble['fold0']['fold0']['train'])
     vertex1_tr, vertex2_tr = paths.data_preparation(paths.files_mean_vertices_wm,
@@ -23,8 +26,8 @@ if __name__ == '__main__':
 
     # построим трейн на основе трейна
     dp.recreate_folder(folder='/Users/daniilvlasenko/Programming/HSE_HCP_fMRI_ensemble_graphs/tmp/train_to_train')
-    edges.models_calculation([edge1_tr, edge2_tr], [vertex1_tr, vertex2_tr], paths.files_mean_models_wm,
-                             '/Users/daniilvlasenko/Programming/HSE_HCP_fMRI_ensemble_graphs/tmp/train_to_train')
+    # edges.models_calculation([edge1_tr, edge2_tr], [vertex1_tr, vertex2_tr], paths.files_mean_models_wm,
+    #                          '/Users/daniilvlasenko/Programming/HSE_HCP_fMRI_ensemble_graphs/tmp/train_to_train')
 
     # построим тест на основе трейна
     edge1_te, edge2_te = paths.data_preparation(paths.files_mean_pearson_cross_correlation_wm,

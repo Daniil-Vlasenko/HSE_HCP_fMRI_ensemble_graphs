@@ -2,8 +2,11 @@ import pandas
 import numpy
 import pickle
 from sklearn import svm
+import paths
+import data_preparation as dp
+from os.path import dirname
 import multiprocessing
-
+from sklearn.linear_model import LogisticRegression
 
 def models_learning(files_in1, files_in2, files_out):
     """
@@ -35,7 +38,8 @@ def models_learning(files_in1, files_in2, files_out):
                                   f'e_{i}_{j}': numpy.concatenate([data_edge1[:, i, j], data_edge2[:, i, j]])})
             Y = [1 for _ in range(data_vertex1.shape[0])] + [2 for _ in range(data_vertex1.shape[0])]
 
-            svc = svm.SVC(kernel="poly", probability=True)
+            svc = svm.SVC(kernel="poly", degree=2,  probability=True)
+            # svc = LogisticRegression(random_state=0)
             svc.fit(X, Y)
             pickle.dump(svc, open(files_out[count], 'wb'))
             count += 1
@@ -86,63 +90,45 @@ def models_calculation(files_in1, files_in2, files_in3, folder_out):
         numpy.save(f'{folder_out}/{file2.split('/')[-1]}', data2)
 
 # ппереоформить каталог ансаблевых графов в словарь и написать цикл вычисления всего подряд  и написать удаление файлов перед вычислением
-# --------------------------------------
 
 
-def ensemble_graphs_(files_in1, files_in2, files_in3, files_out):
-    def ensemble_graphs_(files_in1, files_in2, files_in3, files_out, proc):
-        data_vertex = pandas.read_csv(files_in2[0], index_col=0)
-        data_edge = pandas.read_csv(files_in3[0], index_col=[0, 1])
-        for i in range(1, len(files_in2)):
-            data_vertex = pandas.concat([data_vertex, pandas.read_csv(files_in2[i], index_col=0)], axis=1)
-            data_edge = pandas.concat([data_edge, pandas.read_csv(files_in3[i], index_col=[0, 1])], axis=1)
-        vertexes = [[], []]
+def cross_validation(files_in1, files_in2, encoding_type, models_files, folder_out1, folder_out2):
+    """
+    "Кросс-валидация" – обучение моделей и построение графов для обучения и тестирования ГНС.
 
-        count = 0
-        for i in range(379):
-            for j in range(i + 1, 379):
-                vertexes[0].append(i + 1), vertexes[1].append(j + 1)
+    :param files_in1: Файлы ребер.
+    :param files_in2: Файлы вершин.
+    :param encoding_type: Тип кодирования.
+    :param models_files: Файлы моделей.
+    :param folder_out1: Папка, куда сохраняются ансамблевые графы для обучения ГНС.
+    :param folder_out3: Папка, куда сохраняются ансамблевые графы для тестирования ГНС.
+    :return:
+    """
+    for i in range(4):
+        # Строим графы для обучения ГНС.
+        for j in range(3):
+            # Обучаем ансамбль.
+            edge1_tr, edge2_tr = paths.data_preparation(files_in1, encoding_type, paths.folds_ensemble[f'fold{i}'][f'fold{j}']['train'])
+            vertex1_tr, vertex2_tr = paths.data_preparation(files_in2, encoding_type, paths.folds_ensemble[f'fold{i}'][f'fold{j}']['train'])
+            dp.recreate_folder(dirname(models_files[0]))
+            models_learning([edge1_tr, edge2_tr], [vertex1_tr, vertex2_tr], models_files)
 
-                svm = pickle.load(open(files_in1[count], 'rb'))
-                X = pandas.DataFrame({f"v{i + 1}": data_vertex.iloc[i, :].tolist(),
-                                      f"v{j + 1}": data_vertex.iloc[j, :].tolist(),
-                                      f"e{i + 1}_{j + 1}": data_edge.loc[(i, j), :].tolist()})
-                Y = svm.predict_proba(X)
+            # Строим графы.
+            edge1_te, edge2_te = paths.data_preparation(files_in1, encoding_type, paths.folds_ensemble[f'fold{i}'][f'fold{j}']['test'])
+            vertex1_te, vertex2_te = paths.data_preparation(files_in2, encoding_type, paths.folds_ensemble[f'fold{i}'][f'fold{j}']['test'])
+            dp.recreate_folder(dirname(folder_out1[i][j]))
+            models_calculation([edge1_te, edge2_te], [vertex1_te, vertex2_te], models_files, folder_out1[i][j])
 
-                if i + j == 1:
-                    data_edge_new = Y[:, 1] - Y[:, 0]
-                else:
-                    data_edge_new = numpy.vstack((data_edge_new, Y[:, 1] - Y[:, 0]))
+        # Строим графы для тестирования ГНС.
+        # Обучаем ансамбль.
+        edge1_tr, edge2_tr = paths.data_preparation(files_in1, encoding_type, paths.folds_gnn[f'fold{i}']['train'])
+        vertex1_tr, vertex2_tr = paths.data_preparation(files_in2, encoding_type, paths.folds_gnn[f'fold{i}']['test'])
+        dp.recreate_folder(dirname(models_files[0]))
+        models_learning([edge1_tr, edge2_tr], [vertex1_tr, vertex2_tr], models_files)
 
-        for count, file_out in enumerate(files_out):
-            graph = pandas.DataFrame({"vertex1": vertexes[0], "vertex2": vertexes[1], "edge_weight": data_edge_new[:, count]})
-            graph.to_csv(file_out, index=False)
+        # Строим графы.
+        edge1_te, edge2_te = paths.data_preparation(files_in1, encoding_type, paths.folds_gnn[f'fold{i}']['test'])
+        vertex1_te, vertex2_te = paths.data_preparation(files_in2, encoding_type, paths.folds_gnn[f'fold{i}']['test'])
+        dp.recreate_folder(dirname(folder_out2[i]))
+        models_calculation([edge1_te, edge2_te], [vertex1_te, vertex2_te], models_files, folder_out2[i])
 
-    files_in1_LR = files_in1[:71631]
-    files_in1_RL = files_in1[71631:]
-    files_in2_LR_1 = files_in2[::4]
-    files_in2_LR_2 = files_in2[1::4]
-    files_in2_RL_1 = files_in2[2::4]
-    files_in2_RL_2 = files_in2[3::4]
-    files_in3_LR_1 = files_in3[::4]
-    files_in3_LR_2 = files_in3[1::4]
-    files_in3_RL_1 = files_in3[2::4]
-    files_in3_RL_2 = files_in3[3::4]
-    files_out_LR_1 = files_out[::4]
-    files_out_LR_2 = files_out[1::4]
-    files_out_RL_1 = files_out[2::4]
-    files_out_RL_2 = files_out[3::4]
-
-    processes = []
-    processes.append(multiprocessing.Process(target=ensemble_graphs_,
-                                             args=(files_in1_LR, files_in2_LR_1, files_in3_LR_1, files_out_LR_1, "LR 1")))
-    processes.append(multiprocessing.Process(target=ensemble_graphs_,
-                                             args=(files_in1_LR, files_in2_LR_2, files_in3_LR_2, files_out_LR_2, "LR 2")))
-    processes.append(multiprocessing.Process(target=ensemble_graphs_,
-                                             args=(files_in1_RL, files_in2_RL_1, files_in3_RL_1, files_out_RL_1, "RL 1")))
-    processes.append(multiprocessing.Process(target=ensemble_graphs_,
-                                             args=(files_in1_RL, files_in2_RL_2, files_in3_RL_2, files_out_RL_2, "RL 2")))
-    for process in processes:
-        process.start()
-    for process in processes:
-        process.join()
