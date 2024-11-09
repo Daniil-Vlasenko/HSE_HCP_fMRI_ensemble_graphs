@@ -29,7 +29,7 @@ def models_learning(files_in1, files_in2, files_out):
     count = 0
     for i in range(379):
         for j in range(i + 1, 379):
-            if (i * 379 + j) % 1000 == 0:
+            if (i * 379 + j) % 10000 == 0:
                 print(i * 379 + j)
             X = pandas.DataFrame({f'v_{i}_mean': numpy.concatenate([data_vertex1[:, i, 0], data_vertex2[:, i, 0]]),
                                   f'v_{j}_mean': numpy.concatenate([data_vertex1[:, j, 0], data_vertex2[:, j, 0]]),
@@ -38,8 +38,8 @@ def models_learning(files_in1, files_in2, files_out):
                                   f'e_{i}_{j}': numpy.concatenate([data_edge1[:, i, j], data_edge2[:, i, j]])})
             Y = [1 for _ in range(data_vertex1.shape[0])] + [2 for _ in range(data_vertex1.shape[0])]
 
-            svc = svm.SVC(kernel="poly", degree=2,  probability=True)
-            # svc = LogisticRegression(random_state=0)
+            # svc = svm.SVC(kernel="poly", degree=2,  probability=True)
+            svc = LogisticRegression(random_state=0)
             svc.fit(X, Y)
             pickle.dump(svc, open(files_out[count], 'wb'))
             count += 1
@@ -70,7 +70,7 @@ def models_calculation(files_in1, files_in2, files_in3, folder_out):
     count = 0
     for i in range(379):
         for j in range(i + 1, 379):
-            if (i * 379 + j) % 1000 == 0:
+            if (i * 379 + j) % 10000 == 0:
                 print(i * 379 + j)
             X = pandas.DataFrame({f'v_{i}_mean': numpy.concatenate([data_vertex1[:, i, 0], data_vertex2[:, i, 0]]),
                                   f'v_{j}_mean': numpy.concatenate([data_vertex1[:, j, 0], data_vertex2[:, j, 0]]),
@@ -89,8 +89,6 @@ def models_calculation(files_in1, files_in2, files_in3, folder_out):
         numpy.save(f'{folder_out}/{file1.split('/')[-1]}', data1)
         numpy.save(f'{folder_out}/{file2.split('/')[-1]}', data2)
 
-# ппереоформить каталог ансаблевых графов в словарь и написать цикл вычисления всего подряд  и написать удаление файлов перед вычислением
-
 
 def cross_validation(files_in1, files_in2, encoding_type, models_files, folder_out1, folder_out2):
     """
@@ -101,12 +99,13 @@ def cross_validation(files_in1, files_in2, encoding_type, models_files, folder_o
     :param encoding_type: Тип кодирования.
     :param models_files: Файлы моделей.
     :param folder_out1: Папка, куда сохраняются ансамблевые графы для обучения ГНС.
-    :param folder_out3: Папка, куда сохраняются ансамблевые графы для тестирования ГНС.
+    :param folder_out2: Папка, куда сохраняются ансамблевые графы для тестирования ГНС.
     :return:
     """
     for i in range(4):
         # Строим графы для обучения ГНС.
         for j in range(3):
+            print(f'i: {i}, j: {j}')
             # Обучаем ансамбль.
             edge1_tr, edge2_tr = paths.data_preparation(files_in1, encoding_type, paths.folds_ensemble[f'fold{i}'][f'fold{j}']['train'])
             vertex1_tr, vertex2_tr = paths.data_preparation(files_in2, encoding_type, paths.folds_ensemble[f'fold{i}'][f'fold{j}']['train'])
@@ -116,19 +115,20 @@ def cross_validation(files_in1, files_in2, encoding_type, models_files, folder_o
             # Строим графы.
             edge1_te, edge2_te = paths.data_preparation(files_in1, encoding_type, paths.folds_ensemble[f'fold{i}'][f'fold{j}']['test'])
             vertex1_te, vertex2_te = paths.data_preparation(files_in2, encoding_type, paths.folds_ensemble[f'fold{i}'][f'fold{j}']['test'])
-            dp.recreate_folder(dirname(folder_out1[i][j]))
+            dp.recreate_folder(folder_out1[i][j])
             models_calculation([edge1_te, edge2_te], [vertex1_te, vertex2_te], models_files, folder_out1[i][j])
 
         # Строим графы для тестирования ГНС.
+        print(f'i: {i}, j: -')
         # Обучаем ансамбль.
         edge1_tr, edge2_tr = paths.data_preparation(files_in1, encoding_type, paths.folds_gnn[f'fold{i}']['train'])
-        vertex1_tr, vertex2_tr = paths.data_preparation(files_in2, encoding_type, paths.folds_gnn[f'fold{i}']['test'])
+        vertex1_tr, vertex2_tr = paths.data_preparation(files_in2, encoding_type, paths.folds_gnn[f'fold{i}']['train'])
         dp.recreate_folder(dirname(models_files[0]))
         models_learning([edge1_tr, edge2_tr], [vertex1_tr, vertex2_tr], models_files)
 
         # Строим графы.
         edge1_te, edge2_te = paths.data_preparation(files_in1, encoding_type, paths.folds_gnn[f'fold{i}']['test'])
         vertex1_te, vertex2_te = paths.data_preparation(files_in2, encoding_type, paths.folds_gnn[f'fold{i}']['test'])
-        dp.recreate_folder(dirname(folder_out2[i]))
+        dp.recreate_folder(folder_out2[i])
         models_calculation([edge1_te, edge2_te], [vertex1_te, vertex2_te], models_files, folder_out2[i])
 

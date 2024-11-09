@@ -15,25 +15,44 @@ import edges_
 
 if __name__ == '__main__':
     encoding_type = 'RL'
-    # for
-
-    edge1_tr, edge2_tr = paths.data_preparation(paths.files_mean_pearson_cross_correlation_wm,
-                                                'LR', paths.folds_ensemble['fold0']['fold0']['train'])
-    vertex1_tr, vertex2_tr = paths.data_preparation(paths.files_mean_vertices_wm,
-                                                    'LR', paths.folds_ensemble['fold0']['fold0']['train'])
-    dp.recreate_folder(folder=paths.folder_mean_models_wm)
-    edges.models_learning([edge1_tr, edge2_tr], [vertex1_tr, vertex2_tr], paths.files_mean_models_wm)
-
-    # построим трейн на основе трейна
-    dp.recreate_folder(folder='/Users/daniilvlasenko/Programming/HSE_HCP_fMRI_ensemble_graphs/tmp/train_to_train')
-    # edges.models_calculation([edge1_tr, edge2_tr], [vertex1_tr, vertex2_tr], paths.files_mean_models_wm,
-    #                          '/Users/daniilvlasenko/Programming/HSE_HCP_fMRI_ensemble_graphs/tmp/train_to_train')
-
-    # построим тест на основе трейна
-    edge1_te, edge2_te = paths.data_preparation(paths.files_mean_pearson_cross_correlation_wm,
-                                                'LR', paths.folds_ensemble['fold0']['fold0']['test'])
-    vertex1_te, vertex2_te = paths.data_preparation(paths.files_mean_vertices_wm,
-                                                    'LR', paths.folds_ensemble['fold0']['fold0']['test'])
-    dp.recreate_folder(folder='/Users/daniilvlasenko/Programming/HSE_HCP_fMRI_ensemble_graphs/tmp/train_to_test')
-    edges.models_calculation([edge1_te, edge2_te], [vertex1_te, vertex2_te], paths.files_mean_models_wm,
-                             '/Users/daniilvlasenko/Programming/HSE_HCP_fMRI_ensemble_graphs/tmp/train_to_test')
+    # edges.cross_validation(files_in1=paths.files_mean_pearson_cross_correlation_wm,
+    #                        files_in2=paths.files_mean_vertices_wm,
+    #                        encoding_type=encoding_type, models_files=paths.files_mean_models_wm,
+    #                        folder_out1=paths.folders_mean_ensemble_edges_train_wm,
+    #                        folder_out2=paths.folders_mean_ensemble_edges_test_wm)
+    print('gambling')
+    edges.cross_validation(files_in1=paths.files_mean_pearson_cross_correlation_gambling,
+                           files_in2=paths.files_mean_vertices_gambling,
+                           encoding_type=encoding_type, models_files=paths.files_mean_models_gambling,
+                           folder_out1=paths.folders_mean_ensemble_edges_train_gambling,
+                           folder_out2=paths.folders_mean_ensemble_edges_test_gambling)
+    # print('motor')
+    # edges.cross_validation(files_in1=paths.files_mean_pearson_cross_correlation_motor,
+    #                        files_in2=paths.files_mean_vertices_motor,
+    #                        encoding_type=encoding_type, models_files=paths.files_mean_models_motor,
+    #                        folder_out1=paths.folders_mean_ensemble_edges_train_motor,
+    #                        folder_out2=paths.folders_mean_ensemble_edges_test_motor)
+    # print('language')
+    # edges.cross_validation(files_in1=paths.files_mean_pearson_cross_correlation_language,
+    #                        files_in2=paths.files_mean_vertices_language,
+    #                        encoding_type=encoding_type, models_files=paths.files_mean_models_language,
+    #                        folder_out1=paths.folders_mean_ensemble_edges_train_language,
+    #                        folder_out2=paths.folders_mean_ensemble_edges_test_language)
+    # print('social')
+    # edges.cross_validation(files_in1=paths.files_mean_pearson_cross_correlation_social,
+    #                        files_in2=paths.files_mean_vertices_social,
+    #                        encoding_type=encoding_type, models_files=paths.files_mean_models_social,
+    #                        folder_out1=paths.folders_mean_ensemble_edges_train_social,
+    #                        folder_out2=paths.folders_mean_ensemble_edges_test_social)
+    # print('relational')
+    # edges.cross_validation(files_in1=paths.files_mean_pearson_cross_correlation_relational,
+    #                        files_in2=paths.files_mean_vertices_relational,
+    #                        encoding_type=encoding_type, models_files=paths.files_mean_models_relational,
+    #                        folder_out1=paths.folders_mean_ensemble_edges_train_relational,
+    #                        folder_out2=paths.folders_mean_ensemble_edges_test_relational)
+    # print('emotion')
+    # edges.cross_validation(files_in1=paths.files_mean_pearson_cross_correlation_emotion,
+    #                        files_in2=paths.files_mean_vertices_emotion,
+    #                        encoding_type=encoding_type, models_files=paths.files_mean_models_emotion,
+    #                        folder_out1=paths.folders_mean_ensemble_edges_train_emotion,
+    #                        folder_out2=paths.folders_mean_ensemble_edges_test_emotion)
