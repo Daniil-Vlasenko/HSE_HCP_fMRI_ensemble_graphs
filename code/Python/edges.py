@@ -7,6 +7,7 @@ import data_preparation as dp
 from os.path import dirname
 import multiprocessing
 from sklearn.linear_model import LogisticRegression
+import gc
 
 def models_learning(files_in1, files_in2, files_out):
     """
@@ -38,10 +39,11 @@ def models_learning(files_in1, files_in2, files_out):
                                   f'e_{i}_{j}': numpy.concatenate([data_edge1[:, i, j], data_edge2[:, i, j]])})
             Y = [1 for _ in range(data_vertex1.shape[0])] + [2 for _ in range(data_vertex1.shape[0])]
 
-            # svc = svm.SVC(kernel="poly", degree=2,  probability=True)
-            svc = LogisticRegression(random_state=0)
-            svc.fit(X, Y)
-            pickle.dump(svc, open(files_out[count], 'wb'))
+            # model = svm.SVC(kernel="poly", degree=2,  probability=True)
+            model = LogisticRegression(random_state=0)
+            model.fit(X, Y)
+            with open(files_out[count], 'wb') as file:
+                pickle.dump(model, file)
             count += 1
 
 
@@ -77,8 +79,9 @@ def models_calculation(files_in1, files_in2, files_in3, folder_out):
                                   f'v_{i}_std': numpy.concatenate([data_vertex1[:, i, 1], data_vertex2[:, i, 1]]),
                                   f'v_{j}_std': numpy.concatenate([data_vertex1[:, j, 1], data_vertex2[:, j, 1]]),
                                   f'e_{i}_{j}': numpy.concatenate([data_edge1[:, i, j], data_edge2[:, i, j]])})
-            svm_ = pickle.load(open(files_in3[count], 'rb'))
-            Y = svm_.predict_proba(X)
+            with open(files_in3[count], 'rb') as file:
+                model = pickle.load(file)
+            Y = model.predict_proba(X)
             results1[:, i, j] = Y[:data_edge1.shape[0], 1] - Y[:data_edge1.shape[0], 0]
             results1[:, j, i] = results1[:, i, j]
             results2[:, i, j] = Y[data_edge1.shape[0]:, 1] - Y[data_edge1.shape[0]:, 0]
@@ -111,12 +114,14 @@ def cross_validation(files_in1, files_in2, encoding_type, models_files, folder_o
             vertex1_tr, vertex2_tr = paths.data_preparation(files_in2, encoding_type, paths.folds_ensemble[f'fold{i}'][f'fold{j}']['train'])
             dp.recreate_folder(dirname(models_files[0]))
             models_learning([edge1_tr, edge2_tr], [vertex1_tr, vertex2_tr], models_files)
+            # gc.collect()
 
             # Строим графы.
             edge1_te, edge2_te = paths.data_preparation(files_in1, encoding_type, paths.folds_ensemble[f'fold{i}'][f'fold{j}']['test'])
             vertex1_te, vertex2_te = paths.data_preparation(files_in2, encoding_type, paths.folds_ensemble[f'fold{i}'][f'fold{j}']['test'])
             dp.recreate_folder(folder_out1[i][j])
             models_calculation([edge1_te, edge2_te], [vertex1_te, vertex2_te], models_files, folder_out1[i][j])
+            gc.collect()
 
         # Строим графы для тестирования ГНС.
         print(f'i: {i}, j: -')
@@ -125,10 +130,12 @@ def cross_validation(files_in1, files_in2, encoding_type, models_files, folder_o
         vertex1_tr, vertex2_tr = paths.data_preparation(files_in2, encoding_type, paths.folds_gnn[f'fold{i}']['train'])
         dp.recreate_folder(dirname(models_files[0]))
         models_learning([edge1_tr, edge2_tr], [vertex1_tr, vertex2_tr], models_files)
+        # gc.collect()
 
         # Строим графы.
         edge1_te, edge2_te = paths.data_preparation(files_in1, encoding_type, paths.folds_gnn[f'fold{i}']['test'])
         vertex1_te, vertex2_te = paths.data_preparation(files_in2, encoding_type, paths.folds_gnn[f'fold{i}']['test'])
         dp.recreate_folder(folder_out2[i])
         models_calculation([edge1_te, edge2_te], [vertex1_te, vertex2_te], models_files, folder_out2[i])
+        gc.collect()
 
