@@ -58,45 +58,48 @@ if __name__ == '__main__':
     #                        folder_out1=paths.folders_mean_ensemble_edges_train_emotion,
     #                        folder_out2=paths.folders_mean_ensemble_edges_test_emotion)
 
-    print('wm')
-    edges.cross_validation(files_in1=paths.files_pca_pearson_cross_correlation_wm,
-                           files_in2=paths.files_pca_vertices_wm,
-                           encoding_type=encoding_type, models_files=paths.files_pca_models_wm,
-                           folder_out1=paths.folders_pca_ensemble_edges_train_wm,
-                           folder_out2=paths.folders_pca_ensemble_edges_test_wm)
-    print('\ngambling')
-    edges.cross_validation(files_in1=paths.files_pca_pearson_cross_correlation_gambling,
-                           files_in2=paths.files_pca_vertices_gambling,
-                           encoding_type=encoding_type, models_files=paths.files_pca_models_gambling,
-                           folder_out1=paths.folders_pca_ensemble_edges_train_gambling,
-                           folder_out2=paths.folders_pca_ensemble_edges_test_gambling)
-    print('\nmotor')
-    edges.cross_validation(files_in1=paths.files_pca_pearson_cross_correlation_motor,
-                           files_in2=paths.files_pca_vertices_motor,
-                           encoding_type=encoding_type, models_files=paths.files_pca_models_motor,
-                           folder_out1=paths.folders_pca_ensemble_edges_train_motor,
-                           folder_out2=paths.folders_pca_ensemble_edges_test_motor)
-    print('\nlanguage')
-    edges.cross_validation(files_in1=paths.files_pca_pearson_cross_correlation_language,
-                           files_in2=paths.files_pca_vertices_language,
-                           encoding_type=encoding_type, models_files=paths.files_pca_models_language,
-                           folder_out1=paths.folders_pca_ensemble_edges_train_language,
-                           folder_out2=paths.folders_pca_ensemble_edges_test_language)
-    print('\nsocial')
-    edges.cross_validation(files_in1=paths.files_pca_pearson_cross_correlation_social,
-                           files_in2=paths.files_pca_vertices_social,
-                           encoding_type=encoding_type, models_files=paths.files_pca_models_social,
-                           folder_out1=paths.folders_pca_ensemble_edges_train_social,
-                           folder_out2=paths.folders_pca_ensemble_edges_test_social)
-    print('\nrelational')
-    edges.cross_validation(files_in1=paths.files_pca_pearson_cross_correlation_relational,
-                           files_in2=paths.files_pca_vertices_relational,
-                           encoding_type=encoding_type, models_files=paths.files_pca_models_relational,
-                           folder_out1=paths.folders_pca_ensemble_edges_train_relational,
-                           folder_out2=paths.folders_pca_ensemble_edges_test_relational)
-    print('\nemotion')
-    edges.cross_validation(files_in1=paths.files_pca_pearson_cross_correlation_emotion,
-                           files_in2=paths.files_pca_vertices_emotion,
-                           encoding_type=encoding_type, models_files=paths.files_pca_models_emotion,
-                           folder_out1=paths.folders_pca_ensemble_edges_train_emotion,
-                           folder_out2=paths.folders_pca_ensemble_edges_test_emotion)
+    # print('wm')
+    # edges.cross_validation(files_in1=paths.files_pca_pearson_cross_correlation_wm,
+    #                        files_in2=paths.files_pca_vertices_wm,
+    #                        encoding_type=encoding_type, models_files=paths.files_pca_models_wm,
+    #                        folder_out1=paths.folders_pca_ensemble_edges_train_wm,
+    #                        folder_out2=paths.folders_pca_ensemble_edges_test_wm)
+    # print('\ngambling')
+    # edges.cross_validation(files_in1=paths.files_pca_pearson_cross_correlation_gambling,
+    #                        files_in2=paths.files_pca_vertices_gambling,
+    #                        encoding_type=encoding_type, models_files=paths.files_pca_models_gambling,
+    #                        folder_out1=paths.folders_pca_ensemble_edges_train_gambling,
+    #                        folder_out2=paths.folders_pca_ensemble_edges_test_gambling)
+    # print('\nmotor')
+    # edges.cross_validation(files_in1=paths.files_pca_pearson_cross_correlation_motor,
+    #                        files_in2=paths.files_pca_vertices_motor,
+    #                        encoding_type=encoding_type, models_files=paths.files_pca_models_motor,
+    #                        folder_out1=paths.folders_pca_ensemble_edges_train_motor,
+    #                        folder_out2=paths.folders_pca_ensemble_edges_test_motor)
+    # print('\nlanguage')
+    # edges.cross_validation(files_in1=paths.files_pca_pearson_cross_correlation_language,
+    #                        files_in2=paths.files_pca_vertices_language,
+    #                        encoding_type=encoding_type, models_files=paths.files_pca_models_language,
+    #                        folder_out1=paths.folders_pca_ensemble_edges_train_language,
+    #                        folder_out2=paths.folders_pca_ensemble_edges_test_language)
+    # print('\nsocial')
+    # edges.cross_validation(files_in1=paths.files_pca_pearson_cross_correlation_social,
+    #                        files_in2=paths.files_pca_vertices_social,
+    #                        encoding_type=encoding_type, models_files=paths.files_pca_models_social,
+    #                        folder_out1=paths.folders_pca_ensemble_edges_train_social,
+    #                        folder_out2=paths.folders_pca_ensemble_edges_test_social)
+    # print('\nrelational')
+    # edges.cross_validation(files_in1=paths.files_pca_pearson_cross_correlation_relational,
+    #                        files_in2=paths.files_pca_vertices_relational,
+    #                        encoding_type=encoding_type, models_files=paths.files_pca_models_relational,
+    #                        folder_out1=paths.folders_pca_ensemble_edges_train_relational,
+    #                        folder_out2=paths.folders_pca_ensemble_edges_test_relational)
+    # print('\nemotion')
+    # edges.cross_validation(files_in1=paths.files_pca_pearson_cross_correlation_emotion,
+    #                        files_in2=paths.files_pca_vertices_emotion,
+    #                        encoding_type=encoding_type, models_files=paths.files_pca_models_emotion,
+    #                        folder_out1=paths.folders_pca_ensemble_edges_train_emotion,
+    #                        folder_out2=paths.folders_pca_ensemble_edges_test_emotion)
+print(list(paths.people))
+# print(paths.folds_gnn)
+# print(paths.folds_ensemble)
