@@ -114,7 +114,6 @@ def cross_validation(files_in1, files_in2, encoding_type, models_files, folder_o
             vertex1_tr, vertex2_tr = paths.data_preparation(files_in2, encoding_type, paths.folds_ensemble[f'fold{i}'][f'fold{j}']['train'])
             dp.recreate_folder(dirname(models_files[0]))
             models_learning([edge1_tr, edge2_tr], [vertex1_tr, vertex2_tr], models_files)
-            # gc.collect()
 
             # Строим графы.
             edge1_te, edge2_te = paths.data_preparation(files_in1, encoding_type, paths.folds_ensemble[f'fold{i}'][f'fold{j}']['test'])
@@ -130,7 +129,6 @@ def cross_validation(files_in1, files_in2, encoding_type, models_files, folder_o
         vertex1_tr, vertex2_tr = paths.data_preparation(files_in2, encoding_type, paths.folds_gnn[f'fold{i}']['train'])
         dp.recreate_folder(dirname(models_files[0]))
         models_learning([edge1_tr, edge2_tr], [vertex1_tr, vertex2_tr], models_files)
-        # gc.collect()
 
         # Строим графы.
         edge1_te, edge2_te = paths.data_preparation(files_in1, encoding_type, paths.folds_gnn[f'fold{i}']['test'])
