@@ -4,7 +4,7 @@ import time
 import data_preparation as dp
 import edges
 import paths
-import edges_
+
 
 # if __name__ == '__main__':
     # Пересоздание папок перед скачиванием (так легче удалять файлы, сгенерированный ранее).

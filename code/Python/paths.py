@@ -278,4 +278,22 @@ def data_preparation(files_in, encoding_type, sample):
 ########## АНСАМБЛИ ##################################################
 
 
+########## Исследование сетей ##################################################
+# Усредненные сети, mean
+average_network_wm = ["../../network_analysis/average_network/WM/0bk.npy",
+                      "../../network_analysis/average_network/WM/2bk.npy"]
+average_network_gambling = ["../../network_analysis/average_network/GAMBLING/win.npy",
+                            "../../network_analysis/average_network/GAMBLING/loss.npy"]
+average_network_motor = ["../../network_analysis/average_network/MOTOR/l.npy",
+                         "../../network_analysis/average_network/MOTOR/r.npy"]
+average_network_language = ["../../network_analysis/average_network/LANGUAGE/story.npy",
+                            "../../network_analysis/average_network/LANGUAGE/math.npy"]
+average_network_social = ["../../network_analysis/average_network/SOCIAL/rnd.npy",
+                          "../../network_analysis/average_network/SOCIAL/mental.npy"]
+average_network_relational = ["../../network_analysis/average_network/RELATIONAL/relation.npy",
+                              "../../network_analysis/average_network/RELATIONAL/match.npy"]
+average_network_emotion = ["../../network_analysis/average_network/EMOTION/neut.npy",
+                           "../../network_analysis/average_network/EMOTION/fear.npy"]
+########## Исследование сетей ##################################################
+
 
