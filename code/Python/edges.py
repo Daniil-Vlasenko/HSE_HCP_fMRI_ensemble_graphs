@@ -1,13 +1,12 @@
 import pandas
 import numpy
 import pickle
-from sklearn import svm
 import paths
 import data_preparation as dp
 from os.path import dirname
-import multiprocessing
 from sklearn.linear_model import LogisticRegression
 import gc
+
 
 def models_learning(files_in1, files_in2, files_out):
     """
